@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Article</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            font-family: poppins, sans-serif;
+        }
+
+        #headerMother{
+            position: relative;
+            width: 100%;
+            height: 50%;
+            background-color: #6DDCBD;
+        }
+
+        #blogImage{
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background-color: #4f4f4f;
+        }
+
+        #blogImageCover{
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background-color: #4f4f4f;
+            opacity: 0.9;
+        }
+
+        #headerDiv{
+            position: absolute;
+            bottom: 5%;
+            left: 27%;
+            width: 46%;
+            height: 18%;
+            border-top: 2px solid black;
+            color: black;
+            font-size: 23px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        #headerDiv > div{
+            display: inline-block;
+            margin-right: 5%;
+            cursor: pointer;
+            padding: 1% 0;
+        }
+
+        #headerDiv > div.active{
+            color: white;
+            border-top: 2px solid white;
+        }
+
+        #blogMother{
+            padding: 2% 5% 0 5%;
+        }
+
+        #blogMother > div{
+            width: 100%;
+        }
+
+        #blogInfoDiv > div{
+            min-height: 70px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        #blogTitle{
+            font-size: 40px;
+            font-weight: bold;
+        }
+
+        #blogCreator, #blogCreator img{
+            border-radius: 50%;
+        }
+
+        #blogCreator img{
+            border: 1px solid grey;
+        }
+
+        #blogCreator, #blogCreator img, #blogCreatorName, #blogDate{
+            min-width: 70px;
+            height: 70px;
+            float: left;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+        }
+
+        #blogText{
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        #blogText img{
+            max-width: 100%;
+        }
+
+        .blogTag{
+            cursor: pointer;
+            background-color: #6DDCBD;
+            display: inline-flex;
+            margin: 0 5px;
+            padding: 0 15px;
+            border-radius: 7px;
+            font-size: 22px;
+            text-decoration: none;
+            color: black;
+            height: 40px;
+            align-items: center;
+        }
+
+        .blogTag:hover{
+            background-color: #7af6d3;
+        }
+
+        #responsesDiv{
+            text-align: center;
+            font-size: 30px;
+        }
+
+        /* helper classes */
+        .displayNone{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div id="headerMother">
+    <img id="blogImage" src="{{ blog_obj.image_url }}">
+    <div id="blogImageCover"></div>
+    <div id="headerDiv">
+        <div class="active" data-target="#blogInfoDiv">BLOG</div>
+        <div data-target="#relatedTagsDiv">RELATED TAGS</div>
+        <div data-target="#responsesDiv">RESPONSES</div>
+    </div>
+</div>
+<div id="blogMother">
+    <div id="blogInfoDiv">
+        <div id="blogTitle">{{ blog_obj.title }}</div>
+        <div>
+            <div id="blogCreator"><img src="{{ creator.image_url }}"></div>
+            <div id="blogCreatorName">{{ creator.full_name }}</div>
+            <div id="blogDate"><i class="fas fa-calendar-day"></i> &nbsp;&nbsp;{{ blog_obj.blog_date }}</div>
+        </div>
+        <div id="blogText">
+            {{ blog_obj.blog_html|safe }}
+        </div>
+    </div>
+
+    <div id="relatedTagsDiv" class="displayNone"></div>
+
+    <div id="responsesDiv" class="displayNone"> No Responses for this blog as of yet!</div>
+</div>
+
+
+<script>
+
+    $(document).ready(function(){
+        let blog_tags = {{ blog_obj.tags|safe }}
+        for(let iter in blog_tags){
+            let tag = blog_tags[iter].trim();
+            $("#relatedTagsDiv").append('<a href="/crawler/?tag='+tag+'" class="blogTag">'+tag+'</a>');
+        }
+    });
+
+    $(document).on("click", "#headerDiv > div", function(){
+        $("#headerDiv div").removeClass("active");
+        $(this).addClass("active");
+        $("#blogMother > div").hide();
+        $($(this).attr("data-target")).show();
+    });
+</script>
+</body>
+</html>
