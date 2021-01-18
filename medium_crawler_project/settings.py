@@ -78,12 +78,22 @@ WSGI_APPLICATION = 'medium_crawler_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'crawlerDB',
+        'NAME': 'crawlerdb',
         'USER': 'postgres',
-        'PASSWORD': '160512',
-        'HOST': 'localhost'
+        'PASSWORD': '1612tMITTU',
+        'HOST': 'crawlerdb.cc56jnnpfvaw.us-east-2.rds.amazonaws.com'
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'crawleDB',
+#         'USER': 'postgres',
+#         'PASSWORD': '160512',
+#         'HOST': 'localhost'
+#     }
+# }
 
 
 # Password validation
