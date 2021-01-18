@@ -27,6 +27,7 @@ SECRET_KEY = '7_ylmh+ku(ne%(+rsnst5pw_zpcpcc$8uyzobv&4aq-wgcet_('
 DEBUG = True
 
 ALLOWED_HOSTS = ['3.137.202.240']
+# ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -88,7 +89,7 @@ DATABASES = {
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'crawleDB',
+#         'NAME': 'crawlerDB',
 #         'USER': 'postgres',
 #         'PASSWORD': '160512',
 #         'HOST': 'localhost'

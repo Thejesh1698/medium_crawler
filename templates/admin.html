@@ -220,7 +220,7 @@
             bottom: 0;
             right: 0;
             background-color: #6DDCBD;
-            opacity: 0.85;
+            opacity: 0.9;
         }
 
         .loader {
@@ -310,19 +310,36 @@
 <script>
 
     var ten_set_value = 1;
+    var search_animation_bool = true;
 
     $(document).ready(function(){
         hideLoader();
+
         let search_query = "{{ search_query }}";
         if(search_query && search_query!== ""){
             $("#crawlerInputTag").val(search_query);
             $("#crawlerSubmit").trigger("click");
+        }
+        else{
+
+            search_animation(true);
+            setTimeout(function(){
+                if(search_animation_bool){
+                    loop_iter = 5;
+                    search_animation(false);
+                }
+            }, 3500);
+
         }
 
         let search_history = {{ search_history|safe }};
         for(let iter in search_history){
             let tag = search_history[iter].fields.name.trim();
             $("#historyDiv").append('<a href="/crawler/?tag='+tag+'" class="blogTag">'+tag+'</a>');
+        }
+
+        if(search_history.length === 0){
+            $("#historyDiv").append('<h3>Search history is empty for now! Search tags to see some magic here!</h3>');
         }
     });
 
@@ -343,6 +360,10 @@
         if(e.which === 13) {
             $("#crawlerSubmit").trigger("click");
         }
+    });
+
+    $(document).on("click", "#crawlerInputTag", function(e){
+        search_animation_bool = false;
     });
 
     $(document).on("click", "#crawlerSubmit", function(){
@@ -367,6 +388,23 @@
     });
 
     // functional area
+
+    let loop_iter = -1;
+    let search_word = "Search";
+    function search_animation(char_boolean) {
+        setTimeout(function() {
+            if (search_animation_bool && loop_iter > -2 && loop_iter < search_word.length) {
+                if(char_boolean){
+                    loop_iter++;
+                }
+                else{
+                    loop_iter--;
+                }
+                $("#crawlerInputTag").val(search_word.substring(0, loop_iter+1));
+                search_animation(char_boolean);
+            }
+        }, 400);
+    }
 
     function ajaxCall(url, method, data, action){
         showLoader();
@@ -412,7 +450,7 @@
                         $("#nextBlogs").prop("disabled", true).addClass("disabled");
                     }
                     else{
-                        $("#prevBlogs").prop("disabled", false).removeClass("disabled");
+                        $("#nextBlogs").prop("disabled", false).removeClass("disabled");
                     }
 
                     $('#prevBlogs, #nextBlogs').show();
@@ -420,19 +458,22 @@
                 else if(response.result_action === "list_of_tags"){
 
                     let tag_list = response.tag_list;
-                    if(tag_list.length > 0){
-                        $("#suggestedTags").empty();
+                    $("#suggestedTags").empty();
+
+                    if(tag_list.length === 0){
+                        $("#suggestedTags").append("<h4>Couldn't find relevant tags!</h4>");
+                    }
+                    else{
+                        for(let iter in tag_list){
+                            let tag = tag_list[iter];
+                            $("#suggestedTags").append('<a href="/crawler/?tag='+tag+'" class="blogTag">'+tag+'</a>');
+                        }
                     }
 
                     $("#blogsBoard").empty().append('<h3 class="redColor">No available blogs for this tag!!</h3>');
                     $('#prevBlogs, #nextBlogs, #historyDiv').hide();
 
                     $('#headerMother > h3, #suggestedTags, #blogsDiv').fadeIn(1000);
-
-                    for(let iter in tag_list){
-                        let tag = tag_list[iter];
-                        $("#suggestedTags").append('<a href="/crawler/?tag='+tag+'" class="blogTag">'+tag+'</a>');
-                    }
                 }
                 hideLoader();
             },

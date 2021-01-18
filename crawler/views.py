@@ -32,7 +32,8 @@ def blog_page(request):
     ul_tag = css_soup.find("ul")
     blog_tags = []
     for li_tag in css_soup.find_all("li"):
-        blog_tags.append(li_tag.find("a").text)
+        if li_tag.find("a"):
+            blog_tags.append(li_tag.find("a").text)
 
     css_soup = css_soup.find("article")
     for next_sibling in css_soup.find("h1").find_next_siblings():
